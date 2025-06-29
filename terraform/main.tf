@@ -7,10 +7,18 @@ provider "aws" {
   region = var.region
 }
 
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+  state = "available"
+
+  filter {
+    name   = "zone-type"
+    values = ["availability-zone"]
+  }
+}
 
 locals {
   cluster_name = var.clusterName
-}
 
-##
+  azs = slice(data.aws_availability_zones.available.names, 0, 3)
+}
+ 
